@@ -1,0 +1,9 @@
+
+RIDIMENSIONAMENTO DELL'APP A FINE EDUCATIVO:
+
+_ Rivistare le dinamiche di raccolta (sia polline che frutto) e impollinazione
+_ Rivisitare UI (probabile esclusione della sezione "seeds")
+_ Modificare parametri di BIODIVERSITA (abbassare soglia di level up)
+_ Togliere ombre
+_ max 150k - 200k poligoni da renderizzare x frame
+_ max 25k poligoni x albero

@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6525524068da7504186983ae03dd2f23, type: 3}
+  m_Name: Plants Dictionary
+  m_EditorClassIdentifier: 
+  AA_models:
+  - {fileID: 3162620182162650137, guid: 4bc90237170e694499e00470e566e4d1, type: 3}
+  - {fileID: 5440720994940179247, guid: 636415e37489b454f9a6409f6b4c97ab, type: 3}
+  - {fileID: 3206363393903856312, guid: 71b26e2180c3ab64fb5b2610bc82855b, type: 3}
+  - {fileID: 7418881320367935523, guid: ef0fe1a92f7072d45aff8295067d1685, type: 3}
+  - {fileID: 3314286498458926909, guid: 5d546b302fa2ac84d9199d18e0c17f44, type: 3}
+  BB_models:
+  - {fileID: 2245159130057795781, guid: b610a88601c358d4ebca11e464375a9d, type: 3}
+  - {fileID: 8663342003446256506, guid: 822ae7aa71683304aa5fdd7ff75ddce7, type: 3}
+  - {fileID: 2880393482009975547, guid: 9e0ce9643548e15478a271e96365fa10, type: 3}
+  - {fileID: 791497454113486309, guid: 317596c096c8c2f43946724e415aa30a, type: 3}
+  - {fileID: 1023351022803149977, guid: bc324af4e98da184a806c60e918862d0, type: 3}
+  CC_models:
+  - {fileID: 5116186193561536151, guid: 09502b04bd100074f894df532d8f2eb6, type: 3}
+  - {fileID: 4789791070218338124, guid: 7bb8d9bcd2d42c74fa854bc128b14685, type: 3}
+  - {fileID: 4677334124502613323, guid: 6eb71c46527574944bac8f0011745fe2, type: 3}
+  - {fileID: 6030501170807575790, guid: 733c292083f60754e908b89c5b3f8d69, type: 3}
+  - {fileID: 3631061797404085430, guid: d563c8c0a30a7e54ca8f0af24cdc059a, type: 3}
+  AB_models:
+  - {fileID: 5093669757767523874, guid: 375b2299d4b3a76458a39b5a98394eb0, type: 3}
+  - {fileID: 1099063891755004482, guid: 44abb7405a9672045a9b2fb90de16a5c, type: 3}
+  - {fileID: 6990101661121845492, guid: e1f618aafa489eb4883362c9373bb433, type: 3}
+  - {fileID: 6990101661121845492, guid: 455383327a887754d9e7f649351e7d2c, type: 3}
+  - {fileID: 6400031725050243717, guid: 5ad4f648d03f0ce4ab072ed46d9992de, type: 3}
+  AC_models:
+  - {fileID: 5093669757767523874, guid: 5ac0058512628384abde3d8ca061e0e8, type: 3}
+  - {fileID: 1099063891755004482, guid: db4df681ca475804d94bfe94f20c23f4, type: 3}
+  - {fileID: 6990101661121845492, guid: d2f3dac6410776447a88c79c8823f71c, type: 3}
+  - {fileID: 6990101661121845492, guid: 36c34d59749c25740bd796b06f8b547e, type: 3}
+  - {fileID: 6400031725050243717, guid: 5ad4f648d03f0ce4ab072ed46d9992de, type: 3}
+  BC_models:
+  - {fileID: 5093669757767523874, guid: 74e19afca4926164fa355e4c3a3a903f, type: 3}
+  - {fileID: 1099063891755004482, guid: 26fd1b9108d57634db4d1191c0409f87, type: 3}
+  - {fileID: 6990101661121845492, guid: a48f0a910c8030942b5e590f65ce87b0, type: 3}
+  - {fileID: 6990101661121845492, guid: 8748091aec215dc488bf0e78832daa9a, type: 3}
+  - {fileID: 6400031725050243717, guid: 5ad4f648d03f0ce4ab072ed46d9992de, type: 3}
+  apple_fruit: {fileID: 6882384261170020747, guid: 596e469f18ef179458881b28d60db9d0, type: 3}
+  cherry_fruit: {fileID: 1892118447240832753, guid: e858e0f0385f1be489c2456d78242e1d, type: 3}
+  fico_fruit: {fileID: 6453257335275870877, guid: 79381549228954549a7dd64db740cc06, type: 3}
