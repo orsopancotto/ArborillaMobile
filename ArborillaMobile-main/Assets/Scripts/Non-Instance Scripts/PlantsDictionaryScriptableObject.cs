@@ -25,28 +25,28 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
     [SerializeField] private GameObject apple_fruit, cherry_fruit, fico_fruit/*, AB_fruit, AC_fruit, BC_fruit*/;
 
     internal Dictionary<PlantGenetics.AllelesCouple, List<GameObject>> chromes_models;
-    //internal static Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_flowers;
+    //internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_flowers;
     internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_fruit;
 
     [Header("Valori Output Frutti")]
-    [SerializeField] internal static byte BaseAverageFruitsOutput = 4;
-    [SerializeField] internal static byte HybridAverageFruitsOutput = 3;
+    internal static byte BaseAverageFruitsOutput = 4;
+    internal static byte HybridAverageFruitsOutput = 3;
 
     [Header("Valori Tempi Di Crescita (impostare multipli di 3 per convenzione)")]
-    [SerializeField] internal static byte BaseDefaultTimeToGrow = 3;
-    [SerializeField] internal static byte HybridDefaultTimeToGrow = 6;
+    internal static byte BaseDefaultTimeToGrow = 3;
+    internal static byte HybridDefaultTimeToGrow = 6;
 
     [Header("Valori Tempi Di Fioritura")]
-    [SerializeField] internal static byte BaseDefaultTimeToBloom = 3;  
-    [SerializeField] internal static byte HybridDefaultTimeToBloom = 5;
+    internal static byte BaseDefaultTimeToBloom = 3;  
+    internal static byte HybridDefaultTimeToBloom = 5;
 
     [Header("Valori Tempi Di Crescita Frutti")]
-    [SerializeField] internal static byte BaseDefaultTimeToBearFruits = 3;
-    [SerializeField] internal static byte HybridDefaultTimeToBearFruits = 5;
+    internal static byte BaseDefaultTimeToBearFruits = 3;
+    internal static byte HybridDefaultTimeToBearFruits = 5;
 
     [Header("Valori Biodiversità default")]
-    [SerializeField] internal static byte BaseDefaultBiodivValue = 10;
-    [SerializeField] internal static byte HybridDefaultBiodivValue = 14;
+    internal static byte BaseDefaultBiodivValue = 10;
+    internal static byte HybridDefaultBiodivValue = 14;
 
     private void OnEnable()
     {
@@ -65,7 +65,7 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
         {
             { PlantGenetics.AllelesCouple.AA, apple_fruit },
             { PlantGenetics.AllelesCouple.BB, cherry_fruit },
-            {PlantGenetics.AllelesCouple.CC, fico_fruit }
+            { PlantGenetics.AllelesCouple.CC, fico_fruit }
         };
     }
 }

@@ -28,18 +28,18 @@ public class SeedsMenuScript : MonoBehaviour
 
     private async void Start()
     {
-        await InventoryManagerScript.Instance.DataLoaded();
+        await InventoryManagerScript.Singleton.DataLoaded();
 
         Initialization();
 
-        InventoryManagerScript.Instance.OnFruitsCollectionUpdated += OnFruitsCollectionUpdated_UpdateSeedsInventory;
+        InventoryManagerScript.Singleton.OnFruitsCollectionUpdated += OnFruitsCollectionUpdated_UpdateSeedsInventory;
     }
 
     private void Initialization()       //istanzio i bottoni necessari in base ai frutti presenti nel file di salvataggio
     {
         ButtonSpriteSwap loaded_btn;
 
-        foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Instance._fruits_collection)
+        foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.fruitsCollection)
         {
             loaded_btn = Instantiate(Resources.Load($"Prefabs/UI/Seeds/{pair.Key} Button") as GameObject, seeds_menu_content).GetComponent<ButtonSpriteSwap>();
 

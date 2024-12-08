@@ -64,7 +64,7 @@ public class PartialPlantScript : MonoBehaviour, IUniversalInteractions
 
         GetComponentInChildren<Collider>().enabled = false;
 
-        GreenhouseManagerScript.Instance.greenhouse_plants[transform.parent.name] = (genetics.chromosomes, true);
+        GreenhouseManagerScript.Singleton.greenhouse_plants[transform.parent.name] = (genetics.chromosomes, true);
 
         StartFruitsHarvest();
     }

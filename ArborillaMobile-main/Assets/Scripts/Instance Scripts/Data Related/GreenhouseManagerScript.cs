@@ -7,13 +7,13 @@ using UnityEngine;
 public class GreenhouseManagerScript : MonoBehaviour, IDataPersistance
 {
     [SerializeField] private GameObject partial_plant_prefab;
-    internal static GreenhouseManagerScript Instance { get; private set; }
+    internal static GreenhouseManagerScript Singleton { get; private set; }
 
     internal Dictionary<string /*spot*/, (PlantGenetics.AllelesCouple Chromes, bool HasBeenHarvested)> greenhouse_plants;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     public void LoadData()

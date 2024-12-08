@@ -26,13 +26,13 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
     {
         genetics = new PlantGenetics(_chromes);
 
-        BiodiversityManager.Instance.UpdateBiodivLevelProgress(genetics, true);
+        BiodiversityManager.Singleton.UpdateBiodivLevelProgress(genetics, true);
 
         current_life_stage = LifeStage.Growing;
 
         current_stage_time = genetics.defaultTimeToGrow;
 
-        PlantDataManager.Instance.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
+        PlantDataManager.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
 
         impollination_canvas.SetActive(false);
 
@@ -55,11 +55,11 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
     {
         genetics = new PlantGenetics(loaded_chromes);
 
-        BiodiversityManager.Instance.LoadPlantsInScene(loaded_chromes);       //aggiunge la pianta al dizionario di piante presenti in scena, senza aggiornare il progresso di biodiv
+        BiodiversityManager.Singleton.LoadPlantsInScene(loaded_chromes);       //aggiunge la pianta al dizionario di piante presenti in scena, senza aggiornare il progresso di biodiv
 
         current_son_chromes = loaded_son_chromes;
 
-        PlantDataManager.Instance.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
+        PlantDataManager.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
 
         impollination_canvas.SetActive(false);
 
@@ -349,8 +349,10 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
     private void SaveData_OnSaveDataCall(object sender, EventArgs e)        //aggiungo i dati relativi a questa pianta al dizionario di plant data manager
     {
-        PlantDataManager.Instance._plants_saved.Add(GetComponentsInParent<Transform>()[1].gameObject.name,
-            (genetics.chromosomes, current_life_stage, current_son_chromes, current_stage_time, DateTime.Now.ToString()));
+        PlantDataManager.Singleton.plants_saved.Add(
+            GetComponentsInParent<Transform>()[1].gameObject.name,
+            (genetics.chromosomes, current_life_stage, current_son_chromes, current_stage_time, DateTime.Now.ToString())
+            );
     }
 
     internal void ArtificialImpollination_OnClick(PlantGenetics.AllelesCouple chromes)      //procedure di impollinazione artificiale
@@ -363,7 +365,7 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
         current_son_chromes = CouplingAlgorithm.CalculateHybrid(genetics, new PlantGenetics(chromes));
 
-        InventoryManagerScript.Instance.UpdatePollenCollection(chromes, -1);
+        InventoryManagerScript.Singleton.UpdatePollenCollection(chromes, -1);
 
         camera_animations_script.ResetPosition(impollination_canvas);
 
@@ -372,13 +374,13 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
     internal void SelfDestroyProcedures()       //fine al testing del sistema di salvataggio e caricamento dati
     {
-        PlantDataManager.Instance.OnSaveDataCall -= SaveData_OnSaveDataCall;
+        PlantDataManager.Singleton.OnSaveDataCall -= SaveData_OnSaveDataCall;
 
         camera_animations_script.OnCameraCloseUp -= OnCameraMoveInOrOut_DisableOrEnableCollider;
 
         camera_animations_script.OnCameraMoveAway -= OnCameraMoveInOrOut_DisableOrEnableCollider;
 
-        BiodiversityManager.Instance.UpdateBiodivLevelProgress(genetics, false);
+        BiodiversityManager.Singleton.UpdateBiodivLevelProgress(genetics, false);
 
         Destroy(gameObject);
     }
@@ -407,7 +409,7 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
         {
             case LifeStage.Blooming:
                 TriggerParticleSystem(Color.cyan);
-                InventoryManagerScript.Instance.UpdatePollenCollection(genetics.chromosomes, 1);
+                InventoryManagerScript.Singleton.UpdatePollenCollection(genetics.chromosomes, 1);
                 current_life_stage = LifeStage.Pending;
                 StartPendingStage();
                 break;

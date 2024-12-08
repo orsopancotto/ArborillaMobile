@@ -13,8 +13,8 @@ public class BiodiversityBarScript : MonoBehaviour
     
     void Start()
     {
-        BiodiversityManager.Instance.OnBiodivProgressUpdated += OnBiodivProgressUpdated_UpdateUI;
-        BiodiversityManager.Instance.OnBiodivLevelUp += OnBiodivLevelUp_UpdateUI;
+        BiodiversityManager.Singleton.OnBiodivProgressUpdated += OnBiodivProgressUpdated_UpdateUI;
+        BiodiversityManager.Singleton.OnBiodivLevelUp += OnBiodivLevelUp_UpdateUI;
 
         if (SystemInfo.deviceType != DeviceType.Desktop) speed = .3f;
 

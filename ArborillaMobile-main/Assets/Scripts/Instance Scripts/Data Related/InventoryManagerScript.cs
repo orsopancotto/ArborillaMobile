@@ -8,11 +8,11 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class InventoryManagerScript : MonoBehaviour, IDataPersistance
 {
-    public static InventoryManagerScript Instance { get; private set; }
+    public static InventoryManagerScript Singleton { get; private set; }
 
-    internal Dictionary<PlantGenetics.AllelesCouple, short> _pollen_collection = new();
+    internal Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection = new();
 
-    internal Dictionary<PlantGenetics.AllelesCouple, short> _fruits_collection = new();
+    internal Dictionary<PlantGenetics.AllelesCouple, short> fruitsCollection = new();
 
     internal Action<PlantGenetics.AllelesCouple, short> OnPollenCollectionUpdated;
 
@@ -20,46 +20,46 @@ public class InventoryManagerScript : MonoBehaviour, IDataPersistance
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     internal void UpdatePollenCollection(PlantGenetics.AllelesCouple _chromes, sbyte amount)        //chiamato da PlantScript; procedura di aggiornamento inventario
     {
 
-        if (_pollen_collection.ContainsKey(_chromes))       //se possiedo già questo tipo di polline, ne incremento la quantità
+        if (pollenCollection.ContainsKey(_chromes))       //se possiedo già questo tipo di polline, ne incremento la quantità
         {
-            _pollen_collection[_chromes] += amount;
+            pollenCollection[_chromes] += amount;
         }
 
         else        //altrimenti aggiungo la nuova coppia di valori (alleli-quantità) a pollen collection e ne incremento la quantità
         {
-            _pollen_collection.Add(_chromes, 1);
+            pollenCollection.Add(_chromes, 1);
         }
 
-        OnPollenCollectionUpdated?.Invoke(_chromes, _pollen_collection[_chromes]);      //lancio evento di aggiornamento UI
+        OnPollenCollectionUpdated?.Invoke(_chromes, pollenCollection[_chromes]);      //lancio evento di aggiornamento UI
     }
 
     internal void UpdateFruitsCollection(PlantGenetics.AllelesCouple _chromes, sbyte amount)        //chiamato da PlantScript; procedura di aggiornamento inventario
     {
 
-        if (_fruits_collection.ContainsKey(_chromes))       //se possiedo già questo tipo di frutto, ne incremento la quantità
+        if (fruitsCollection.ContainsKey(_chromes))       //se possiedo già questo tipo di frutto, ne incremento la quantità
         {
-            _fruits_collection[_chromes] += amount;
+            fruitsCollection[_chromes] += amount;
         }
 
         else        //altrimenti aggiungo la nuova coppia di valori (alleli-quantità) a fruits collection e ne incremento la quantità
         {
-            _fruits_collection.Add(_chromes, 1);
+            fruitsCollection.Add(_chromes, 1);
         }
 
-        OnFruitsCollectionUpdated?.Invoke(_chromes, _fruits_collection[_chromes]);      //lancio evento di aggiornamento UI
+        OnFruitsCollectionUpdated?.Invoke(_chromes, fruitsCollection[_chromes]);      //lancio evento di aggiornamento UI
     }
 
     public void LoadData()
     {
-        _pollen_collection = GameData.currentSessionData.pollenCollection;
+        pollenCollection = GameData.currentSessionData.pollenCollection;
 
-        _fruits_collection = GameData.currentSessionData.fruitsCollection;
+        fruitsCollection = GameData.currentSessionData.fruitsCollection;
 
         DataLoaded();       //brutto ma funzia
     }
@@ -71,8 +71,8 @@ public class InventoryManagerScript : MonoBehaviour, IDataPersistance
 
     public void SaveData()
     {
-        GameData.currentSessionData.pollenCollection = _pollen_collection;
+        GameData.currentSessionData.pollenCollection = pollenCollection;
 
-        GameData.currentSessionData.fruitsCollection = _fruits_collection;
+        GameData.currentSessionData.fruitsCollection = fruitsCollection;
     }
 }

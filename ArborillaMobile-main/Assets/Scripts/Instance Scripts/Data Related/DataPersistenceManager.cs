@@ -1,50 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.SceneManagement;
 
 public class DataPersistenceManager : MonoBehaviour
 {
     [Header("File Storage Config")]
     [SerializeField] private string file_name;
 
-    public static DataPersistenceManager Instance { get; private set; }
+    public static DataPersistenceManager Singleton { get; private set; }
     private List<IDataPersistance> data_persistance_objects;
     private FIleDataHandler data_handler;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
-    //#if UNITY_EDITOR        //boh su telefono OnEnable non sembra funzionare bene
-
-    //    //avvio procedura di caricamento salvataggio qui, altrimenti l'ordine in cui gli oggetti vengono inizializzati nella scena crea problemi col caricamento dati.
-    //    //su telefono invece non si riscontra questo problema, pare.
-
-    //    private void OnEnable() 
-    //    {
-    //        data_handler = new FIleDataHandler(Application.persistentDataPath, file_name);
-
-    //        data_persistance_objects = FindDataPersistanceObjects();
-
-    //        LoadGame();
-    //    }
-
-    //#else
-
-    //    private void Start() 
-    //    {
-    //        data_handler = new FIleDataHandler(Application.persistentDataPath, file_name);
-
-    //        data_persistance_objects = FindDataPersistanceObjects();
-
-    //        LoadGame();
-    //    }
-
-    //#endif
-
-    private void Start()    //invece sembra funzionare...
+    private void Start()
     {
         data_handler = new FIleDataHandler(Application.persistentDataPath, file_name);
 
@@ -52,7 +24,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         LoadGame();
 
-        SceneLoaderScript.Instance.OnSceneLoadingProcedure += SaveGame;
+        SceneLoaderScript.Singleton.OnSceneLoadingProcedure += SaveGame;
     }
 
     public void NewGame()
@@ -90,7 +62,7 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SceneLoaderScript.Instance.OnSceneLoadingProcedure -= SaveGame;
+        SceneLoaderScript.Singleton.OnSceneLoadingProcedure -= SaveGame;
     }
 
 

@@ -1,29 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
 [DisallowMultipleComponent]
 public class BiodiversityManager : MonoBehaviour, IDataPersistance
 {
-    public static BiodiversityManager Instance { get; private set; }
-    private short _max_lvl_progress;
-    private short _biodiv_lvl_progress;
-    private byte _biodiv_lvl;
+    public static BiodiversityManager Singleton { get; private set; }
+    private short max_lvl_progress;
+    private short biodiv_lvl_progress;
+    private byte biodiv_lvl;
     private Dictionary<PlantGenetics.AllelesCouple, byte> plants_in_scene = new();
     internal Action<byte, float, float> OnBiodivLevelUp;
     internal Action<float, float> OnBiodivProgressUpdated;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     private void Start()
     {
-        GameObject.Find("Progress Bar").GetComponent<BiodiversityBarScript>().InitializeUI(_biodiv_lvl, _biodiv_lvl_progress, _max_lvl_progress);
+        GameObject.Find("Progress Bar").GetComponent<BiodiversityBarScript>().InitializeUI(biodiv_lvl, biodiv_lvl_progress, max_lvl_progress);
     }
 
     internal void LoadPlantsInScene(PlantGenetics.AllelesCouple chromes)        //carica le piante presenti nel file di salvataggio nel dizionario; eseguito solo dalle piante caricate
@@ -44,21 +43,21 @@ public class BiodiversityManager : MonoBehaviour, IDataPersistance
         {
             RemovePlant(new_plant.chromosomes);
 
-            _biodiv_lvl_progress -= CalculateBiodivIncrement(new_plant.chromosomes, new_plant.defaultBiodiversityValue);
+            biodiv_lvl_progress -= CalculateBiodivIncrement(new_plant.chromosomes, new_plant.defaultBiodiversityValue);
 
-            if (_biodiv_lvl_progress < 0) _biodiv_lvl_progress = 0;     //non permette la retrocessione di livello (per ora)
+            if (biodiv_lvl_progress < 0) biodiv_lvl_progress = 0;     //non permette la retrocessione di livello (per ora)
 
-            OnBiodivProgressUpdated?.Invoke(_biodiv_lvl_progress, _max_lvl_progress);       //chiamata di aggiornamento UI
+            OnBiodivProgressUpdated?.Invoke(biodiv_lvl_progress, max_lvl_progress);       //chiamata di aggiornamento UI
         }
     }
 
     private void CheckForLevelUp(PlantGenetics.AllelesCouple chromes, byte default_amount)      //gestisce i due casi: aumento biodiv, aumento biodiv e di livello
     {
-        _biodiv_lvl_progress += CalculateBiodivIncrement(chromes, default_amount);
+        biodiv_lvl_progress += CalculateBiodivIncrement(chromes, default_amount);
 
-        if (_biodiv_lvl_progress >= _max_lvl_progress) BiodivLevelUp();     //avvio processo di level up
+        if (biodiv_lvl_progress >= max_lvl_progress) BiodivLevelUp();     //avvio processo di level up
 
-        else OnBiodivProgressUpdated?.Invoke(_biodiv_lvl_progress, _max_lvl_progress);      //chiamata di aggiornamento UI
+        else OnBiodivProgressUpdated?.Invoke(biodiv_lvl_progress, max_lvl_progress);      //chiamata di aggiornamento UI
     }
 
     private short CalculateBiodivIncrement(PlantGenetics.AllelesCouple chromes, short default_amount)       //funzione di aumento biodiv; varia in base al numero di piante dello stesso tipo presenti in scena
@@ -76,13 +75,13 @@ public class BiodiversityManager : MonoBehaviour, IDataPersistance
 
     private void BiodivLevelUp()        //procedure di level up
     {
-        _biodiv_lvl_progress -= _max_lvl_progress;      //ricavo la quantità di biodiv sforata dal livello attuale, ottenendo così il valore di progresso relativo al nuovo livello
+        biodiv_lvl_progress -= max_lvl_progress;      //ricavo la quantità di biodiv sforata dal livello attuale, ottenendo così il valore di progresso relativo al nuovo livello
 
-        _max_lvl_progress = (short)(_max_lvl_progress * 1.3f);      //aumento la soglia di biodiv da superare per salire nuovamente di livello
+        max_lvl_progress = (short)(max_lvl_progress * 1.3f);      //aumento la soglia di biodiv da superare per salire nuovamente di livello
 
-        _biodiv_lvl += 1;
+        biodiv_lvl++;
 
-        OnBiodivLevelUp?.Invoke(_biodiv_lvl, _biodiv_lvl_progress, _max_lvl_progress);      //chiamata di aggiornamento UI
+        OnBiodivLevelUp?.Invoke(biodiv_lvl, biodiv_lvl_progress, max_lvl_progress);      //chiamata di aggiornamento UI
     }
 
     private void AddPlant(PlantGenetics.AllelesCouple chromes)      //aggiungo la nuova pianta al dizionario di piante presenti in scena
@@ -112,15 +111,15 @@ public class BiodiversityManager : MonoBehaviour, IDataPersistance
 
     public void LoadData()
     {
-        _biodiv_lvl = GameData.currentSessionData.biodivLvl;
-        _biodiv_lvl_progress = GameData.currentSessionData.biodivLvlProgress;
-        _max_lvl_progress = GameData.currentSessionData.maxLvlProgress;
+        biodiv_lvl = GameData.currentSessionData.biodivLvl;
+        biodiv_lvl_progress = GameData.currentSessionData.biodivLvlProgress;
+        max_lvl_progress = GameData.currentSessionData.maxLvlProgress;
     }
 
     public void SaveData()
     {
-        GameData.currentSessionData.biodivLvl = _biodiv_lvl;
-        GameData.currentSessionData.biodivLvlProgress = _biodiv_lvl_progress;
-        GameData.currentSessionData.maxLvlProgress = _max_lvl_progress;
+        GameData.currentSessionData.biodivLvl = biodiv_lvl;
+        GameData.currentSessionData.biodivLvlProgress = biodiv_lvl_progress;
+        GameData.currentSessionData.maxLvlProgress = max_lvl_progress;
     }
 }

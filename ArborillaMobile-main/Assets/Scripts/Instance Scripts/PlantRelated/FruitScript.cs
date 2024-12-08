@@ -43,7 +43,7 @@ public class FruitScript : MonoBehaviour, IUniversalInteractions
     {
         HapticFeedback.LightFeedback();
 
-        InventoryManagerScript.Instance.UpdateFruitsCollection(Parameters.fruitChromes, 1);
+        InventoryManagerScript.Singleton.UpdateFruitsCollection(Parameters.fruitChromes, 1);
 
         StartCoroutine(ShrinkAnimation());
     }

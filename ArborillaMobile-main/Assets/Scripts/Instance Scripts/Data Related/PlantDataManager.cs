@@ -6,19 +6,17 @@ using UnityEngine;
 
 public class PlantDataManager : MonoBehaviour, IDataPersistance
 {
-    public static PlantDataManager Instance { get; private set; }
-    [HideInInspector] internal Dictionary<string, (PlantGenetics.AllelesCouple Chromosomes, PlantScript.LifeStage LifeStage, PlantGenetics.AllelesCouple SonChromes, short Timer, string DateTime)> _plants_saved = new();
+    public static PlantDataManager Singleton { get; private set; }
+    [HideInInspector] internal Dictionary<string, (PlantGenetics.AllelesCouple Chromosomes, PlantScript.LifeStage LifeStage, PlantGenetics.AllelesCouple SonChromes, short Timer, string DateTime)> plants_saved = new();
     internal event EventHandler OnSaveDataCall;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     public void LoadData()        //procedura di caricamento dati del dizionario salvato delle piante
     {
-        SpawnManagerScript spawn_manager = SpawnManagerScript.Instance;
-
         /* chiamo il metodo spawn di spawn manager per ogni pianta salvata, specificandone i parametri necessari: 
          - cromosomi
          - fase del ciclo vitale della pianta
@@ -30,8 +28,13 @@ public class PlantDataManager : MonoBehaviour, IDataPersistance
         {
             try
             {
-                spawn_manager.SpawnPlant(GameObject.Find(pairs.Key).GetComponent<Transform>(), pairs.Value.Chromosomes, pairs.Value.LifeStage, pairs.Value.SonChromes,
-                    CalculateStartingTimer(pairs.Value.Timer, (int)(DateTime.Now - DateTime.Parse(pairs.Value.DateTime)).TotalSeconds));
+                SpawnManagerScript.Instance.SpawnPlant(
+                    GameObject.Find(pairs.Key).GetComponent<Transform>(),
+                    pairs.Value.Chromosomes, 
+                    pairs.Value.LifeStage, 
+                    pairs.Value.SonChromes,
+                    CalculateStartingTimer(pairs.Value.Timer, (int)(DateTime.Now - DateTime.Parse(pairs.Value.DateTime)).TotalSeconds)
+                    );
             }
             catch(Exception e)
             {
@@ -46,7 +49,7 @@ public class PlantDataManager : MonoBehaviour, IDataPersistance
 
         OnSaveDataCall?.Invoke(this, EventArgs.Empty);      //lancio evento di chiusura app; a cui cono iscritte tutte le piante presenti in scena
 
-        GameData.currentSessionData.oasisPlants = _plants_saved;
+        GameData.currentSessionData.oasisPlants = plants_saved;
     }
 
     private short CalculateStartingTimer(int x, int y)      //calcolo del progresso del timer, tenendo in considerazione dei limiti costanti del tipo short

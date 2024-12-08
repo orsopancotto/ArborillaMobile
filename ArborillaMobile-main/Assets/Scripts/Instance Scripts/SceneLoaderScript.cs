@@ -14,14 +14,14 @@ public class SceneLoaderScript : MonoBehaviour
 #else 
     private float fade_speed = 0.05f;
 #endif
-    private byte current_scene;
+
     private Button change_scene_btn;
-    internal static SceneLoaderScript Instance;
+    internal static SceneLoaderScript Singleton;
     internal Action OnSceneLoadingProcedure;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     void Start()
@@ -39,11 +39,11 @@ public class SceneLoaderScript : MonoBehaviour
         });
     }
 
-    private async void StartSceneChangeProcedures()
+    private async void StartSceneChangeProcedures()     //bella porcata
     {
         // 0:StartingScene  1:PersonalOasisScene  2:TransitionScene  3:MainScene
 
-        current_scene = (byte)SceneManager.GetActiveScene().buildIndex;
+        var current_scene = (byte)SceneManager.GetActiveScene().buildIndex;
 
         switch (current_scene)
         {

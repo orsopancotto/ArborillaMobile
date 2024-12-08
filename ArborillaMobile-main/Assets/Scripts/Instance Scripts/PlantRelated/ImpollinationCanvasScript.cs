@@ -14,7 +14,7 @@ public class ImpollinationCanvasScript : MonoBehaviour
 
         Button btn;
 
-        foreach(KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Instance._pollen_collection)
+        foreach(KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.pollenCollection)
         {
             if (pair.Value > 0)
             {

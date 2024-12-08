@@ -42,7 +42,7 @@ public class PlaceholderScript : MonoBehaviour, IUniversalInteractions
 
         SpawnManagerScript.Instance.SpawnPlant(GetComponentsInParent<Transform>()[1], requested_chromosomes);
 
-        InventoryManagerScript.Instance.UpdateFruitsCollection(requested_chromosomes, -1);
+        InventoryManagerScript.Singleton.UpdateFruitsCollection(requested_chromosomes, -1);
 
         seeds_menu_script.ExitPlantingPhase(requested_chromosomes);
     }

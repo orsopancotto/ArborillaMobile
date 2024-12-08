@@ -23,18 +23,18 @@ public class PollenMenuScript : MonoBehaviour
 
     private async void Start()
     {
-        await InventoryManagerScript.Instance.DataLoaded();
+        await InventoryManagerScript.Singleton.DataLoaded();
 
         Initialization();
 
-        InventoryManagerScript.Instance.OnPollenCollectionUpdated += OnPollenCollectionUpdated_UpdateUI;
+        InventoryManagerScript.Singleton.OnPollenCollectionUpdated += OnPollenCollectionUpdated_UpdateUI;
     }
 
     private void Initialization()        //inizializzo seeds_inventory con i dati salvati dalla sessione precedente, e ne aggiorno la UI
     {
-        if(InventoryManagerScript.Instance._pollen_collection.Count > 0)
+        if(InventoryManagerScript.Singleton.pollenCollection.Count > 0)
         {
-            foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Instance._pollen_collection)
+            foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.pollenCollection)
             {
                 pollen_inventory.Add(
                     pair.Key,
