@@ -5,7 +5,7 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Oasis Manager", menuName = "Scriptable Objects/Oasis Manager")]
 public class OasisManagerSO : ScriptableObject, IDataPersistance
-{    
+{
     public static OasisManagerSO Singleton { get; private set; }
 
     internal List<PlantDataPacket> oasis_plants;
@@ -44,7 +44,7 @@ public class OasisManagerSO : ScriptableObject, IDataPersistance
          - tempo rimasto alla scadenza della fase del ciclo vitale (al momento di chiusura app)
          - data e ora al momento di chiusura app
         */
-        foreach (var plant in GameData.currentSessionData.oasisPlants)
+        foreach (var plant in oasis_plants)
         {
             try
             {

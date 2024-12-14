@@ -35,13 +35,13 @@ public class GreenhouseManagerSO : ScriptableObject, IDataPersistance
     {
         if (scene_index != 3) return;
 
-        GameObject loaded_plant;
-
         foreach (KeyValuePair<string, (PlantGenetics.AllelesCouple Chromes, bool HasBeenHarvested)> pair in greenhouse_plants)
         {
-            loaded_plant = Instantiate(partial_plant_prefab, GameObject.Find(pair.Key).GetComponent<Transform>());
-
-            loaded_plant.GetComponent<PartialPlantScript>().Initialize(pair.Value.Chromes, pair.Value.HasBeenHarvested);
+            SpawnManagerScript.Singleton.SpawnPlant(
+                GameObject.Find(pair.Key).GetComponent<Transform>(),
+                pair.Value.Chromes,
+                pair.Value.HasBeenHarvested
+                );
         }
 
     }

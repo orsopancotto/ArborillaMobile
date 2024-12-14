@@ -7,8 +7,8 @@ using UnityEngine;
 
 public class FIleDataHandler
 {
-    private readonly string data_dir_path = " ";
-    private readonly string data_file_name = " ";
+    private readonly string data_dir_path = "";
+    private readonly string data_file_name = "";
 
     public FIleDataHandler(string _data_dir_path, string _data_file_name)
     {

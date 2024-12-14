@@ -5054,6 +5054,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generic_plant: {fileID: 2302798787328675897, guid: e40e3eb1ceefdcd489966a64d9c8a9b6, type: 3}
+  partial_plant: {fileID: 2302798787328675897, guid: f0cf8d9db8e0e5d46a482af31519a8f2, type: 3}
 --- !u!4 &1607135180
 Transform:
   m_ObjectHideFlags: 0

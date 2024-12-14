@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         Singleton = this;
         data_persistance_manager = new DataPersistance(data_file_name, FindDataPersistanceObjects());
         data_persistance_manager.LoadGame();
-        Debug.Log(GameData.currentSessionData.ToString());
+        //Debug.Log(GameData.currentSessionData.ToString());
         OnGameStarted?.Invoke();
     }
 
