@@ -19,7 +19,8 @@ public readonly struct PlantGenetics
     {
         chromosomes = _chromosomes;
 
-        Models = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_models[chromosomes];
+        //Models = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_models[chromosomes];
+        Models = PlantsDictionaryScriptableObject.Singleton.chromes_models[chromosomes];
 
         alleles = new char[2];
         alleles = chromosomes.ToString().ToCharArray();
@@ -28,19 +29,19 @@ public readonly struct PlantGenetics
 
         if (isBase)
         {
-            defaultTimeToGrow = PlantsDictionaryScriptableObject.BaseDefaultTimeToGrow;
-            defaultTimeToBloom = PlantsDictionaryScriptableObject.BaseDefaultTimeToBloom;
-            defaultTimeToBearFruits = PlantsDictionaryScriptableObject.BaseDefaultTimeToBearFruits;
-            avrgFruitsOutput = PlantsDictionaryScriptableObject.BaseAverageFruitsOutput;
-            defaultBiodiversityValue = PlantsDictionaryScriptableObject.BaseDefaultBiodivValue;
+            defaultTimeToGrow = PlantsDictionaryScriptableObject.Singleton.BaseDefaultTimeToGrow;
+            defaultTimeToBloom = PlantsDictionaryScriptableObject.Singleton.BaseDefaultTimeToBloom;
+            defaultTimeToBearFruits = PlantsDictionaryScriptableObject.Singleton.BaseDefaultTimeToBearFruits;
+            avrgFruitsOutput = PlantsDictionaryScriptableObject.Singleton.BaseAverageFruitsOutput;
+            defaultBiodiversityValue = PlantsDictionaryScriptableObject.Singleton.BaseDefaultBiodivValue;
         }
         else
         {
-            defaultTimeToGrow = PlantsDictionaryScriptableObject.HybridDefaultTimeToGrow;
-            defaultTimeToBloom = PlantsDictionaryScriptableObject.HybridDefaultTimeToBloom;
-            defaultTimeToBearFruits = PlantsDictionaryScriptableObject.HybridDefaultTimeToBearFruits;
-            avrgFruitsOutput = PlantsDictionaryScriptableObject.HybridAverageFruitsOutput;
-            defaultBiodiversityValue = PlantsDictionaryScriptableObject.HybridDefaultBiodivValue;
+            defaultTimeToGrow = PlantsDictionaryScriptableObject.Singleton.HybridDefaultTimeToGrow;
+            defaultTimeToBloom = PlantsDictionaryScriptableObject.Singleton.HybridDefaultTimeToBloom;
+            defaultTimeToBearFruits = PlantsDictionaryScriptableObject.Singleton.HybridDefaultTimeToBearFruits;
+            avrgFruitsOutput = PlantsDictionaryScriptableObject.Singleton.HybridAverageFruitsOutput;
+            defaultBiodiversityValue = PlantsDictionaryScriptableObject.Singleton.HybridDefaultBiodivValue;
         }
     }
 

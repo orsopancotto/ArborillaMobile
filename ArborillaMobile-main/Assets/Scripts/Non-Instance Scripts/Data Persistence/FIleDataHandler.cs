@@ -20,11 +20,13 @@ public class FIleDataHandler
     {
         string full_path = Path.Combine(data_dir_path, data_file_name);     //usiamo combine perchè riesce a gestire i diversi separatori di percorso tra i diversi OS
 
+        var data = new GameData();
+
         if (File.Exists(full_path))
         {
             try
             {
-                string data_to_load = " ";
+                string data_to_load = "";
 
                 using (FileStream stream = new FileStream(full_path, FileMode.Open))        //scrittura dati sul file (non ho idea di cosa ci sia scritto :) )
                 {
@@ -34,7 +36,7 @@ public class FIleDataHandler
                     }
                 }
 
-                GameData.currentSessionData = JsonConvert.DeserializeObject<GameData>(data_to_load);     //deserializzazione dei dati da json a oggetto c#
+                data = JsonConvert.DeserializeObject<GameData>(data_to_load);     //deserializzazione dei dati da json a oggetto c#
             }
 
             catch (Exception e)
@@ -44,12 +46,13 @@ public class FIleDataHandler
 
         }
 
-        return GameData.currentSessionData;
+        return data;
     }
 
     public void Save()
     {
         string full_path = Path.Combine(data_dir_path, data_file_name);     //usiamo combine perchè riesce a gestire i diversi separatori di percorso tra i diversi OS
+
         try
         {
             Directory.CreateDirectory(Path.GetDirectoryName(full_path));

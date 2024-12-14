@@ -3,12 +3,12 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SpawnManagerScript : MonoBehaviour
 {
-    public static SpawnManagerScript Instance { get; private set; }
+    public static SpawnManagerScript Singleton { get; private set; }
     [SerializeField] private GameObject generic_plant;
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     //overload "base" del metodo, utilizzato da UI in fase di semina:

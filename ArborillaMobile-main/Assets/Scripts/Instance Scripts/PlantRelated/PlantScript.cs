@@ -26,52 +26,42 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
     {
         genetics = new PlantGenetics(_chromes);
 
-        BiodiversityManager.Singleton.UpdateBiodivLevelProgress(genetics, true);
+        BiodiversityManagerSO.Singleton.UpdateBiodivLevelProgress(genetics, true);
 
         current_life_stage = LifeStage.Growing;
 
         current_stage_time = genetics.defaultTimeToGrow;
 
-        PlantDataManager.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
-
-        impollination_canvas.SetActive(false);
+        OasisManagerSO.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
 
         camera_animations_script = Camera.main.GetComponent<CameraAnimations>();
 
-        camera_animations_script.OnCameraCloseUp += delegate { GetComponentInChildren<Collider>().enabled = false; };       //disattivo il collider a tutte le piante altrimenti cliccando su una pianta in secondo piano si rompe tutto
-
-        camera_animations_script.OnCameraMoveAway += delegate { GetComponentInChildren<Collider>().enabled = true; };
+        camera_animations_script.OnCameraAnimation += OnCameraAnimation_DisableOrEnableCollider;
 
         ps_main_module = particle_system.main;
 
-        impollination_canvas.GetComponentInChildren<Button>(true).onClick.AddListener(delegate { camera_animations_script.ResetPosition(impollination_canvas); });      //assegnazione funzione di uscita impollinazione a bottone specifico del canvas di impollinazione
+        impollination_canvas.GetComponentInChildren<Button>(true).onClick.AddListener(delegate { CancelArtificialImpollination(); });          //assegnazione funzione di uscita impollinazione a bottone specifico del canvas di impollinazione      
 
         StartGrowingStage(0);
     }
 
     #region PROCEDURE DI CARICAMENTO
 
-    internal void Initialization(PlantGenetics.AllelesCouple loaded_chromes, LifeStage loaded_life_stage, PlantGenetics.AllelesCouple loaded_son_chromes, short loaded_stage_time)     //overload specifico del metodo Initialization, indirettamente chiamato da PlantDataManager in fase di cariamento
+    internal void Initialization(PlantGenetics.AllelesCouple loaded_chromes, LifeStage loaded_life_stage, PlantGenetics.AllelesCouple loaded_son_chromes, short loaded_stage_time)     //overload specifico del metodo Initialization, indirettamente chiamato da PlantDataManagerSO in fase di cariamento
     {
         genetics = new PlantGenetics(loaded_chromes);
 
-        BiodiversityManager.Singleton.LoadPlantsInScene(loaded_chromes);       //aggiunge la pianta al dizionario di piante presenti in scena, senza aggiornare il progresso di biodiv
-
         current_son_chromes = loaded_son_chromes;
 
-        PlantDataManager.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
-
-        impollination_canvas.SetActive(false);
+        OasisManagerSO.Singleton.OnSaveDataCall += SaveData_OnSaveDataCall;        //iscrivo la funzione all'evento chiamato dal plant data manager in chiusura app
 
         camera_animations_script = Camera.main.GetComponent<CameraAnimations>();
 
-        camera_animations_script.OnCameraCloseUp += OnCameraMoveInOrOut_DisableOrEnableCollider;       //disattivo il collider a tutte le piante altrimenti cliccando su una pianta in secondo piano si rompe tutto
-
-        camera_animations_script.OnCameraMoveAway += OnCameraMoveInOrOut_DisableOrEnableCollider;
+        camera_animations_script.OnCameraAnimation += OnCameraAnimation_DisableOrEnableCollider;
 
         ps_main_module = particle_system.main;
 
-        impollination_canvas.GetComponentInChildren<Button>(true).onClick.AddListener(delegate { camera_animations_script.ResetPosition(impollination_canvas); });      //assegnazione funzione di uscita impollinazione a bottone specifico del canvas di impollinazione
+        impollination_canvas.GetComponentInChildren<Button>(true).onClick.AddListener(delegate { CancelArtificialImpollination(); });      //assegnazione funzione di uscita impollinazione a bottone specifico del canvas di impollinazione
 
         DetermineProgress(loaded_stage_time, loaded_life_stage);
     }
@@ -237,15 +227,15 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
         switch (current_son_chromes)
         {
             case PlantGenetics.AllelesCouple.BB:
-                fruit = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_fruit[PlantGenetics.AllelesCouple.BB];
+                fruit = PlantsDictionaryScriptableObject.Singleton.chromes_fruit[PlantGenetics.AllelesCouple.BB];
                 break;
 
             case PlantGenetics.AllelesCouple.CC:
-                fruit = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_fruit[PlantGenetics.AllelesCouple.CC];
+                fruit = PlantsDictionaryScriptableObject.Singleton.chromes_fruit[PlantGenetics.AllelesCouple.CC];
                 break;
 
             default:
-                fruit = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_fruit[PlantGenetics.AllelesCouple.AA];
+                fruit = PlantsDictionaryScriptableObject.Singleton.chromes_fruit[PlantGenetics.AllelesCouple.AA];
                 break;
         }
         //****TEMP****
@@ -336,8 +326,6 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
     internal void FruitsHarvestEnded()
     {
-        //camera_animations_script.ResetPosition();     lo faccio eseguire da FruitScript
-
         current_life_stage = LifeStage.Blooming;
 
         current_stage_time = genetics.defaultTimeToBloom;
@@ -349,10 +337,14 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
     private void SaveData_OnSaveDataCall(object sender, EventArgs e)        //aggiungo i dati relativi a questa pianta al dizionario di plant data manager
     {
-        PlantDataManager.Singleton.plants_saved.Add(
+        OasisManagerSO.Singleton.oasis_plants.Add(new PlantDataPacket(
             GetComponentsInParent<Transform>()[1].gameObject.name,
-            (genetics.chromosomes, current_life_stage, current_son_chromes, current_stage_time, DateTime.Now.ToString())
-            );
+            genetics.chromosomes,
+            current_son_chromes, 
+            current_life_stage, 
+            current_stage_time, 
+            DateTime.Now.ToString()
+            ));
     }
 
     internal void ArtificialImpollination_OnClick(PlantGenetics.AllelesCouple chromes)      //procedure di impollinazione artificiale
@@ -365,30 +357,32 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
         current_son_chromes = CouplingAlgorithm.CalculateHybrid(genetics, new PlantGenetics(chromes));
 
-        InventoryManagerScript.Singleton.UpdatePollenCollection(chromes, -1);
+        InventoryManagerSO.Singleton.UpdatePollenCollection(chromes, -1);
 
-        camera_animations_script.ResetPosition(impollination_canvas);
+        camera_animations_script.ResetPosition();
 
         StartFruitsBearingStage();
     }
 
-    internal void SelfDestroyProcedures()       //fine al testing del sistema di salvataggio e caricamento dati
+    private void CancelArtificialImpollination()        //chiamato da OnCLick su bottone di annullamento impollinazione
     {
-        PlantDataManager.Singleton.OnSaveDataCall -= SaveData_OnSaveDataCall;
+        impollination_canvas.SetActive(false);
 
-        camera_animations_script.OnCameraCloseUp -= OnCameraMoveInOrOut_DisableOrEnableCollider;
-
-        camera_animations_script.OnCameraMoveAway -= OnCameraMoveInOrOut_DisableOrEnableCollider;
-
-        BiodiversityManager.Singleton.UpdateBiodivLevelProgress(genetics, false);
-
-        Destroy(gameObject);
+        camera_animations_script.ResetPosition();
     }
 
-    private void OnCameraMoveInOrOut_DisableOrEnableCollider(bool b)      //ho dovuto rimpiazzare la rispettiva funzione anonima con questo metodo, altrimenti disiscriversi all'evento diventa inutilmente complicato
+    private void OnCameraAnimation_DisableOrEnableCollider()
     {
         Collider coll = GetComponentInChildren<Collider>();
-        coll.enabled = b;
+
+        coll.enabled = !coll.enabled;
+    }
+
+    internal void Erease()      //chiamato quando entra in collisione con pala
+    {
+        BiodiversityManagerSO.Singleton.UpdateBiodivLevelProgress(genetics, false);
+
+        Destroy(gameObject);
     }
 
     #region AZIONI CHIAMATE DA USER INPUT
@@ -409,14 +403,15 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
         {
             case LifeStage.Blooming:
                 TriggerParticleSystem(Color.cyan);
-                InventoryManagerScript.Singleton.UpdatePollenCollection(genetics.chromosomes, 1);
+                InventoryManagerSO.Singleton.UpdatePollenCollection(genetics.chromosomes, 1);
                 current_life_stage = LifeStage.Pending;
                 StartPendingStage();
                 break;
 
             case LifeStage.Pending:
                 info_canvas.SetActive(false);
-                camera_animations_script.MoveToPlant(new Vector2(transform.position.x, transform.position.z), impollination_canvas);
+                camera_animations_script.MoveToPlant(new Vector2(transform.position.x, transform.position.z));
+                impollination_canvas.SetActive(true);
                 break;
 
             case LifeStage.FruitsBearing:
@@ -432,4 +427,11 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
     }
 
     #endregion
+
+    private void OnDestroy()
+    {
+        OasisManagerSO.Singleton.OnSaveDataCall -= SaveData_OnSaveDataCall;
+
+        camera_animations_script.OnCameraAnimation -= OnCameraAnimation_DisableOrEnableCollider;
+    }
 }

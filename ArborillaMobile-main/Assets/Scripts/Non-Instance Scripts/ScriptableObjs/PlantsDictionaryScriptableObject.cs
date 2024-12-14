@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Plants Dictionary", menuName = "Scriptable Objects/Plants Dictionary")]
 public class PlantsDictionaryScriptableObject : ScriptableObject
 {
+    public static PlantsDictionaryScriptableObject Singleton { get; private set; }
+
     [Header("Apple Models")]
     [SerializeField] private List<GameObject> AA_models = new List<GameObject>(5);
 
@@ -22,35 +24,40 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
     [Header("BC Models")]
     [SerializeField] private List<GameObject> BC_models = new List<GameObject>(5);
 
-    [SerializeField] private GameObject apple_fruit, cherry_fruit, fico_fruit/*, AB_fruit, AC_fruit, BC_fruit*/;
+    [Header("Fruits Models")]
+    [SerializeField] private GameObject apple_fruit;
+    [SerializeField] private GameObject cherry_fruit;
+    [SerializeField] private GameObject fico_fruit;
 
     internal Dictionary<PlantGenetics.AllelesCouple, List<GameObject>> chromes_models;
     //internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_flowers;
     internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_fruit;
 
     [Header("Valori Output Frutti")]
-    internal static byte BaseAverageFruitsOutput = 4;
-    internal static byte HybridAverageFruitsOutput = 3;
+    internal byte BaseAverageFruitsOutput = 4;
+    internal byte HybridAverageFruitsOutput = 3;
 
     [Header("Valori Tempi Di Crescita (impostare multipli di 3 per convenzione)")]
-    internal static byte BaseDefaultTimeToGrow = 3;
-    internal static byte HybridDefaultTimeToGrow = 6;
+    internal byte BaseDefaultTimeToGrow = 3;
+    internal byte HybridDefaultTimeToGrow = 6;
 
     [Header("Valori Tempi Di Fioritura")]
-    internal static byte BaseDefaultTimeToBloom = 3;  
-    internal static byte HybridDefaultTimeToBloom = 5;
+    internal byte BaseDefaultTimeToBloom = 3;  
+    internal byte HybridDefaultTimeToBloom = 5;
 
     [Header("Valori Tempi Di Crescita Frutti")]
-    internal static byte BaseDefaultTimeToBearFruits = 3;
-    internal static byte HybridDefaultTimeToBearFruits = 5;
+    internal byte BaseDefaultTimeToBearFruits = 3;
+    internal byte HybridDefaultTimeToBearFruits = 5;
 
     [Header("Valori Biodiversità default")]
-    internal static byte BaseDefaultBiodivValue = 10;
-    internal static byte HybridDefaultBiodivValue = 14;
+    internal byte BaseDefaultBiodivValue = 10;
+    internal byte HybridDefaultBiodivValue = 14;
 
     private void OnEnable()
     {
-        chromes_models = new()
+        Singleton = this;
+
+        Singleton.chromes_models = new()
         {
             { PlantGenetics.AllelesCouple.AA, AA_models },
             { PlantGenetics.AllelesCouple.BB, BB_models },
@@ -61,7 +68,7 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
 
         };
 
-        chromes_fruit = new()
+        Singleton.chromes_fruit = new()
         {
             { PlantGenetics.AllelesCouple.AA, apple_fruit },
             { PlantGenetics.AllelesCouple.BB, cherry_fruit },

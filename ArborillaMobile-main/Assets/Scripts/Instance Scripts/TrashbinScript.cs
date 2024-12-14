@@ -32,10 +32,12 @@ public class TrashbinScript : MonoBehaviour, IUniversalInteractions
 #endif
 
     private Vector3 initial_position;
+    private Collider coll;
 
-    private void Start()
+    private void Awake()
     {
         initial_position = transform.position;
+        coll = GetComponent<Collider>();
     }
 
     public void Grabbed()
@@ -44,7 +46,7 @@ public class TrashbinScript : MonoBehaviour, IUniversalInteractions
         StartCoroutine(RiseAnimation(target_yPosition));
         StartCoroutine(RotationAnimation(target_xEulerRotation));
 
-        GetComponent<Collider>().enabled = false;
+        coll.enabled = false;
     }
 
     public void InteractionEnded()
@@ -68,7 +70,7 @@ public class TrashbinScript : MonoBehaviour, IUniversalInteractions
     {
         if (other.CompareTag("Interactable"))
         {
-            other.gameObject.GetComponentInParent<PlantScript>().SelfDestroyProcedures();
+            other.GetComponentInParent<PlantScript>().Erease();
 
             HapticFeedback.MediumFeedback();
         }
@@ -114,12 +116,11 @@ public class TrashbinScript : MonoBehaviour, IUniversalInteractions
     {
         float starting_distance = Vector3.Distance(transform.position, initial_position);
 
-        Collider collider = GetComponent<Collider>();
-        collider.enabled = true;
+        coll.enabled = true;
 
         yield return new WaitForSeconds(.1f);
 
-        collider.enabled = false;
+        coll.enabled = false;
 
         while (!DoCoordinatesMatch(initial_position, starting_distance))
         {
@@ -128,6 +129,6 @@ public class TrashbinScript : MonoBehaviour, IUniversalInteractions
             yield return null;
         }
 
-        GetComponent<Collider>().enabled = true;
+        coll.enabled = true;
     }
 }

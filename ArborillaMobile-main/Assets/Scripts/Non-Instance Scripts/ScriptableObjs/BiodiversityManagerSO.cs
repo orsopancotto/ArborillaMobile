@@ -1,33 +1,40 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
-
-[DisallowMultipleComponent]
-public class BiodiversityManager : MonoBehaviour, IDataPersistance
+[CreateAssetMenu(fileName = "Biodiversity Manager", menuName = "Scriptable Objects/Biodiversity Manager")]
+public class BiodiversityManagerSO : ScriptableObject, IDataPersistance
 {
-    public static BiodiversityManager Singleton { get; private set; }
+    public static BiodiversityManagerSO Singleton { get; private set; }
+
     private short max_lvl_progress;
     private short biodiv_lvl_progress;
     private byte biodiv_lvl;
     private Dictionary<PlantGenetics.AllelesCouple, byte> plants_in_scene = new();
+
     internal Action<byte, float, float> OnBiodivLevelUp;
     internal Action<float, float> OnBiodivProgressUpdated;
 
-    private void Awake()
+    private void OnEnable()
     {
         Singleton = this;
     }
 
-    private void Start()
+    public void InitializeObj()
     {
-        GameObject.Find("Progress Bar").GetComponent<BiodiversityBarScript>().InitializeUI(biodiv_lvl, biodiv_lvl_progress, max_lvl_progress);
+        GameManager.Singleton.OnGameStarted += SyncPlantsMap;
     }
 
-    internal void LoadPlantsInScene(PlantGenetics.AllelesCouple chromes)        //carica le piante presenti nel file di salvataggio nel dizionario; eseguito solo dalle piante caricate
+    private void SyncPlantsMap()        //sincronizza il dizionario contatore con le piante che sono già presenti all'avvio
     {
-        AddPlant(chromes);
+        foreach(var obj in GameData.currentSessionData.oasisPlants)
+        {
+            if (plants_in_scene.ContainsKey(obj.chromosomes)) plants_in_scene[obj.chromosomes]++;
+
+            else plants_in_scene.Add(obj.chromosomes, 1);
+        }
     }
 
     internal void UpdateBiodivLevelProgress(PlantGenetics new_plant, bool hasIncreased)     //aggiorna il progresso in biodiversità; chiamato dalla pianta in distruzione e istanza
@@ -45,7 +52,7 @@ public class BiodiversityManager : MonoBehaviour, IDataPersistance
 
             biodiv_lvl_progress -= CalculateBiodivIncrement(new_plant.chromosomes, new_plant.defaultBiodiversityValue);
 
-            if (biodiv_lvl_progress < 0) biodiv_lvl_progress = 0;     //non permette la retrocessione di livello (per ora)
+            if (biodiv_lvl_progress < 0) biodiv_lvl_progress = 0;     //non permette la retrocessione di livello 
 
             OnBiodivProgressUpdated?.Invoke(biodiv_lvl_progress, max_lvl_progress);       //chiamata di aggiornamento UI
         }
@@ -93,17 +100,14 @@ public class BiodiversityManager : MonoBehaviour, IDataPersistance
             return;
         }
 
-        else
-        {
-            plants_in_scene[chromes] += 1;
-        }
+        plants_in_scene[chromes]++;
     }
 
     private void RemovePlant(PlantGenetics.AllelesCouple chromes)       //rimuovoi la pianta dal dizionario di piante presenti in scena
     {
-        plants_in_scene[chromes] -= 1;
+        plants_in_scene[chromes]--;
 
-        if(plants_in_scene[chromes] <= 0)
+        if (plants_in_scene[chromes] <= 0)
         {
             plants_in_scene.Remove(chromes);
         }

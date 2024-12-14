@@ -8,13 +8,13 @@ public class ImpollinationCanvasScript : MonoBehaviour
     [SerializeField] private RectTransform content;
     [SerializeField] private PlantScript parent_PlantScript;
 
-    private void OnEnable()
-    {
-        //DisableOthers();
+    private List<Button> buttons_cached = new();
 
+    private void OnEnable()     //carica i bottoni necessari a seconda degli elementi presenti nell'inventario
+    {
         Button btn;
 
-        foreach(KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.pollenCollection)
+        foreach(var pair in InventoryManagerSO.Singleton.pollenCollection)
         {
             if (pair.Value > 0)
             {
@@ -24,43 +24,20 @@ public class ImpollinationCanvasScript : MonoBehaviour
 
                 btn.onClick.AddListener(delegate { parent_PlantScript.ArtificialImpollination_OnClick(pair.Key); });
 
+                buttons_cached.Add(btn);
             }
         }
     }
 
-    private void OnDisable()
+    private void OnDisable()        //distrugge tutti i bottoni tranne quello di default di uscita
     {
-        Button[] btns = GetComponentsInChildren<Button>();
-
-        foreach(Button element in btns)
+        foreach(var element in buttons_cached)
         {
-            if(element.gameObject.name != "Exit Button")
-            {
-                element.onClick.RemoveAllListeners();
+            if (element.gameObject.name == "Exit Button") continue;
 
-                Destroy(element.gameObject);
-            }
+            Destroy(element.gameObject);
         }
+
+        buttons_cached.Clear();
     }
-
-    //private void DisableOthers()        //pare essere impegnativo a livello computazionale :(
-    //{
-    //    ImpollinationCanvasScript[] active_canvas = FindObjectsByType<ImpollinationCanvasScript>(sortMode: FindObjectsSortMode.None, findObjectsInactive: FindObjectsInactive.Exclude);
-
-    //    if(active_canvas.Length == 0)
-    //    {
-    //        return;
-    //    }
-
-    //    foreach (ImpollinationCanvasScript canvas in active_canvas)
-    //    {
-    //        if (canvas != this)
-    //        {
-    //            canvas.gameObject.SetActive(false);
-
-    //            return;
-    //        }
-    //    }
-
-    //}
 }

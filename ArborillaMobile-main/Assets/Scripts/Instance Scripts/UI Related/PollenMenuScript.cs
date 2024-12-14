@@ -21,20 +21,18 @@ public class PollenMenuScript : MonoBehaviour
         relative_btn_mask.SetActive(true);
     }
 
-    private async void Start()
+    private void Start()
     {
-        await InventoryManagerScript.Singleton.DataLoaded();
-
         Initialization();
 
-        InventoryManagerScript.Singleton.OnPollenCollectionUpdated += OnPollenCollectionUpdated_UpdateUI;
+        InventoryManagerSO.Singleton.OnPollenCollectionUpdated += OnPollenCollectionUpdated_UpdateUI;
     }
 
     private void Initialization()        //inizializzo seeds_inventory con i dati salvati dalla sessione precedente, e ne aggiorno la UI
     {
-        if(InventoryManagerScript.Singleton.pollenCollection.Count > 0)
+        if(InventoryManagerSO.Singleton.pollenCollection.Count > 0)
         {
-            foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.pollenCollection)
+            foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerSO.Singleton.pollenCollection)
             {
                 pollen_inventory.Add(
                     pair.Key,
@@ -62,6 +60,11 @@ public class PollenMenuScript : MonoBehaviour
 
             pollen_inventory[key].SetText($"{key}: {_updated_amount}");
         }
+    }
+
+    private void OnDestroy()
+    {
+        InventoryManagerSO.Singleton.OnPollenCollectionUpdated -= OnPollenCollectionUpdated_UpdateUI;
     }
 
 }

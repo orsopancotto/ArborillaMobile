@@ -7,7 +7,7 @@ public class CameraMovementAuth : MonoBehaviour
 
     [SerializeField] private Transform camera_transform;
 
-    internal static CameraMovementAuth Instance;
+    internal static CameraMovementAuth Singleton;
     private Vector3 predicted_position;
     private Bounds camera_bounds;
     private RaycastHit hit;
@@ -16,7 +16,7 @@ public class CameraMovementAuth : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        Singleton = this;
     }
 
     private void Start()
