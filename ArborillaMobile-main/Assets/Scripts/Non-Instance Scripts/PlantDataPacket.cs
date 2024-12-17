@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 /// <summary>
@@ -6,12 +7,15 @@ using System;
 [Serializable]
 public class PlantDataPacket
 {
-    public readonly string spotName, time;
-    public readonly PlantGenetics.AllelesCouple chromosomes, sonChromosomes;
-    public readonly PlantScript.LifeStage lifeStage;
-    public readonly short stageTime;
+    public readonly string spotName;
+    public readonly PlantGenetics.AllelesCouple chromosomes;
+    public PlantGenetics.AllelesCouple sonChromosomes;
+    public PlantScript.LifeStage lifeStage;
+    public short stageTime;
+    public string time;
 
-    public PlantDataPacket(
+    [JsonConstructor]
+    public PlantDataPacket(     //usato per la deserializzazione dei dati
         string spotName, 
         PlantGenetics.AllelesCouple chromosomes,
         PlantGenetics.AllelesCouple sonChromosomes, 
@@ -27,6 +31,16 @@ public class PlantDataPacket
         this.time = time;
     }
 
+    public PlantDataPacket(string spotName, PlantGenetics genetics)
+    {
+        this.spotName = spotName;
+        chromosomes = genetics.chromosomes;
+        sonChromosomes = PlantGenetics.AllelesCouple.none;
+        lifeStage = PlantScript.LifeStage.Growing;
+        stageTime = genetics.defaultTimeToGrow;
+        time = DateTime.Now.ToString();
+    }
+
     public override string ToString()
     {
         return $"Nome spot: {spotName}\n" +
@@ -34,6 +48,6 @@ public class PlantDataPacket
             $"cromosomi frutto: {sonChromosomes}\n" +
             $"life stage: {lifeStage}\n" +
             $"stage time:{stageTime}\n" +
-            $"last save time: {time}";
+            $"last save time: {time}\n";
     }
 }

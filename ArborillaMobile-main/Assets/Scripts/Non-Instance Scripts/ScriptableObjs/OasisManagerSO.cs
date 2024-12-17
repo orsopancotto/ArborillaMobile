@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Oasis Manager", menuName = "Scriptable Objects/Oasis Manager")]
@@ -23,7 +24,7 @@ public class OasisManagerSO : ScriptableObject, IDataPersistance
 
     public void LoadData()
     {
-        oasis_plants = new();
+        oasis_plants = GameData.currentSessionData.oasisPlants;
     }
 
     public void SaveData()
@@ -41,9 +42,10 @@ public class OasisManagerSO : ScriptableObject, IDataPersistance
          - cromosomi
          - fase del ciclo vitale della pianta
          - cromosomi del figlio
-         - tempo rimasto alla scadenza della fase del ciclo vitale (al momento di chiusura app)
-         - data e ora al momento di chiusura app
+         - tempo rimasto alla scadenza della fase del ciclo vitale al momento di salvataggio della pianta
+         - data e ora al momento di salvataggio della pianta
         */
+
         foreach (var plant in oasis_plants)
         {
             try
@@ -68,6 +70,32 @@ public class OasisManagerSO : ScriptableObject, IDataPersistance
         if (x - y <= short.MinValue) return 0;
 
         else return (short)(x - y);
+    }
+
+    internal void UpdatePlantData(string spot_name, short stage_time)
+    {
+        PlantDataPacket data = oasis_plants.Where(p => p.spotName == spot_name).FirstOrDefault();
+
+        data.stageTime = stage_time;
+    }
+
+    internal void UpdatePlantData(string spot_name, PlantGenetics.AllelesCouple son_chromes)
+    {
+        PlantDataPacket data = oasis_plants.Where(p => p.spotName == spot_name).FirstOrDefault();
+
+        data.sonChromosomes = son_chromes;
+    }
+
+    internal void UpdatePlantData(string spot_name, PlantScript.LifeStage life_stage)
+    {
+        PlantDataPacket data = oasis_plants.Where(p => p.spotName == spot_name).FirstOrDefault();
+
+        data.lifeStage = life_stage;
+    }
+
+    internal void EreasePlantData(string spot_name)
+    {
+        oasis_plants.RemoveAll(p => p.spotName == spot_name);
     }
 
 }

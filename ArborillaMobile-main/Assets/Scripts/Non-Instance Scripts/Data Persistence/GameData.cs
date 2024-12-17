@@ -61,13 +61,13 @@ public class GameData
         return $"biodivLvl: {biodivLvl}\n*****" +
             $"\nbiodivLvlProgress: {biodivLvlProgress}\n*****" +
             $"\nmaxLvlProgress: {maxLvlProgress}\n*****" +
-            $"\noasisPlants:\n{ListToString(oasisPlants)}\n*****" +
-            $"\npollenCollection:\n{DictionaryToString(pollenCollection)}\n*****" +
-            $"\nfruitsCollection:\n{DictionaryToString(fruitsCollection)}\n*****" +
-            $"\ngreenhousePlants: {greenhousePlants.Count}";
+            $"\noasisPlants:\n{/*ListToString(oasisPlants)*/oasisPlants.Count}\n*****" +
+            $"\npollenCollection:\n{/*DictionaryToString(pollenCollection)*/pollenCollection.Count}\n*****" +
+            $"\nfruitsCollection:\n{/*DictionaryToString(fruitsCollection)*/fruitsCollection.Count}\n*****" +
+            $"\ngreenhousePlants: {greenhousePlants.Count}*****";
     }
 
-    private string DictionaryToString<Key, Value>(Dictionary<Key, Value> map)
+    private string DictionaryToString<TK, TV>(Dictionary<TK, TV> map)
     {
         string s = "";
 

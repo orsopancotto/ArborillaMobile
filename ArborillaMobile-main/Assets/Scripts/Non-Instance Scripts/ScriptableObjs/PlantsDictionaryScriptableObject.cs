@@ -29,9 +29,9 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
     [SerializeField] private GameObject cherry_fruit;
     [SerializeField] private GameObject fico_fruit;
 
-    internal Dictionary<PlantGenetics.AllelesCouple, List<GameObject>> chromes_models;
-    //internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_flowers;
-    internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromes_fruit;
+    internal Dictionary<PlantGenetics.AllelesCouple, List<GameObject>> chromesModels;
+    //internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromesFlowers;
+    internal Dictionary<PlantGenetics.AllelesCouple, GameObject> chromesFruit;
 
     [Header("Valori Output Frutti")]
     internal byte BaseAverageFruitsOutput = 4;
@@ -57,7 +57,7 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
     {
         Singleton = this;
 
-        Singleton.chromes_models = new()
+        Singleton.chromesModels = new()
         {
             { PlantGenetics.AllelesCouple.AA, AA_models },
             { PlantGenetics.AllelesCouple.BB, BB_models },
@@ -68,7 +68,7 @@ public class PlantsDictionaryScriptableObject : ScriptableObject
 
         };
 
-        Singleton.chromes_fruit = new()
+        Singleton.chromesFruit = new()
         {
             { PlantGenetics.AllelesCouple.AA, apple_fruit },
             { PlantGenetics.AllelesCouple.BB, cherry_fruit },

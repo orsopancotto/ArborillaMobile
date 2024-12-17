@@ -31,14 +31,13 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Singleton = this;
-        data_persistance_manager = new DataPersistance(data_file_name, FindDataPersistanceObjects());
-        data_persistance_manager.LoadGame();
-        //Debug.Log(GameData.currentSessionData.ToString());
-        OnGameStarted?.Invoke();
     }
 
     private void Start()
     {
+        data_persistance_manager = new DataPersistance(data_file_name, FindDataPersistanceObjects());
+        data_persistance_manager.LoadGame();
+        OnGameStarted?.Invoke();
         PushData();
         StartSceneChangeProcedures();
     }
@@ -46,7 +45,6 @@ public class GameManager : MonoBehaviour
     private async void StartSceneChangeProcedures()     //bella porcata
     {
         // 0:StartingScene  1:PersonalOasisScene  2:TransitionScene  3:MainScene
-
         switch (current_scene_index)
         {
             case 0:
@@ -141,7 +139,7 @@ public class GameManager : MonoBehaviour
 
     private void PushData()
     {
-        foreach(var obj in data_persistance_manager.dataPersistanceObjects)
+        foreach (var obj in data_persistance_manager.dataPersistanceObjects)
         {
             obj.LoadData();
         }
@@ -150,21 +148,20 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR        //OnApplicationQuit non funziona su android, usiamo OnApplicationPause e OnApplicationFocus (metodo non definitivo)
     private void OnApplicationQuit()
     {
-        data_persistance_manager.SaveGame();
+        data_persistance_manager?.SaveGame();
     }
 #else
     private void OnApplicationPause()
     {
-        data_persistance_manager.SaveGame();
+        data_persistance_manager?.SaveGame();
     }
 
     private void OnApplicationFocus(bool focus)
     {
         if (!focus)
         {
-            data_persistance_manager.SaveGame();
+            data_persistance_manager?.SaveGame();
         }
     }
 #endif
-
 }

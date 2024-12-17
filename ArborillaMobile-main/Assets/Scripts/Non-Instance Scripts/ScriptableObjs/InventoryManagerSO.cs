@@ -9,8 +9,8 @@ public class InventoryManagerSO : ScriptableObject, IDataPersistance
 {
     public static InventoryManagerSO Singleton { get; private set; }
 
-    internal Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection = new();
-    internal Dictionary<PlantGenetics.AllelesCouple, short> fruitsCollection = new();
+    internal Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection/* = new()*/;
+    internal Dictionary<PlantGenetics.AllelesCouple, short> fruitsCollection/* = new()*/;
     internal Action<PlantGenetics.AllelesCouple, short> OnPollenCollectionUpdated;
     internal Action<PlantGenetics.AllelesCouple, short> OnFruitsCollectionUpdated;
 
@@ -22,6 +22,20 @@ public class InventoryManagerSO : ScriptableObject, IDataPersistance
     public void InitializeObj()
     {
         return;
+    }
+
+    public void LoadData()
+    {
+        pollenCollection = GameData.currentSessionData.pollenCollection;
+
+        fruitsCollection = GameData.currentSessionData.fruitsCollection;
+    }
+
+    public void SaveData()
+    {
+        GameData.currentSessionData.pollenCollection = pollenCollection;
+
+        GameData.currentSessionData.fruitsCollection = fruitsCollection;
     }
 
     internal void UpdatePollenCollection(PlantGenetics.AllelesCouple _chromes, sbyte amount)        //chiamato da PlantScript; procedura di aggiornamento inventario
@@ -54,19 +68,5 @@ public class InventoryManagerSO : ScriptableObject, IDataPersistance
         }
 
         OnFruitsCollectionUpdated?.Invoke(_chromes, fruitsCollection[_chromes]);      //lancio evento di aggiornamento UI
-    }
-
-    public void LoadData()
-    {
-        pollenCollection = GameData.currentSessionData.pollenCollection;
-
-        fruitsCollection = GameData.currentSessionData.fruitsCollection;
-    }
-
-    public void SaveData()
-    {
-        GameData.currentSessionData.pollenCollection = pollenCollection;
-
-        GameData.currentSessionData.fruitsCollection = fruitsCollection;
     }
 }

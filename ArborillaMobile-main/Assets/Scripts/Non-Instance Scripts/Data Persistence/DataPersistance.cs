@@ -23,12 +23,10 @@ public class DataPersistance
 
         if (GameData.currentSessionData == null)
         {
-            Debug.Log("No data found, loading new game");
-
             NewGame();
         }
 
-        foreach(var obj in dataPersistanceObjects)
+        foreach (var obj in dataPersistanceObjects)
         {
             obj.InitializeObj();
         }
