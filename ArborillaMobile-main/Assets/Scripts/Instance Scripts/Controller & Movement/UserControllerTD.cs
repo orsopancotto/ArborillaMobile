@@ -99,7 +99,7 @@ public class UserControllerTD : MonoBehaviour
     {
         predicted_zoom = CalculateZoom();
 
-        if (predicted_zoom < min_FOV || predicted_zoom > max_FOV || !CameraMovementAuth.Instance.IsZoomAuthorized()) return;
+        if (predicted_zoom < min_FOV || predicted_zoom > max_FOV || !CameraMovementAuth.Singleton.IsZoomAuthorized()) return;
 
         Camera.main.fieldOfView = predicted_zoom;
     }
@@ -206,7 +206,7 @@ public class UserControllerTD : MonoBehaviour
     private void MoveCamera(Vector2 delta_position)     //funzione di spostamento della telecamera
     {
         //richiesta autorizzazione dello spostamento calcolato
-        transform.position = CameraMovementAuth.Instance.AuthorizeMovement(CalculatePositionShift(delta_position));
+        transform.position = CameraMovementAuth.Singleton.AuthorizeMovement(CalculatePositionShift(delta_position));
     }
 
     private Vector3 CalculatePositionShift(Vector2 delta_position)

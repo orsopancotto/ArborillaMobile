@@ -21,7 +21,6 @@ public class CameraAnimations : MonoBehaviour
 
 #endif
 
-
     [Range(1, 10)]
     [SerializeField] internal float distance_from_plant = 6;     //da mettere private
 
@@ -30,40 +29,26 @@ public class CameraAnimations : MonoBehaviour
 
     [SerializeField] private UserControllerTD controller;
 
-    internal event Action<bool> OnCameraCloseUp;    
-    internal event Action<bool> OnCameraMoveAway;
+    internal event Action OnCameraAnimation;
 
     private Vector3 default_position;
     private const float default_camera_height = 8, default_FOV = 70;      //impostato su unity arbitrariamente
 
     private bool DoCoordinatesMatch(Vector3 target_pos, float starting_distance)
     {
-        return Vector3.Distance(transform.position, target_pos) / starting_distance * 100 <= 1;
+        return Vector3.Distance(transform.position, target_pos) / starting_distance <= .01f;
     }
 
     private bool DoValuesMatch(float target_value, float starting_delta, float current_value)
     {
-        return MathF.Abs(current_value - target_value) / starting_delta * 100 <= 1;
+        return MathF.Abs(current_value - target_value) / starting_delta <= .01f;
     }
 
     internal void MoveToPlant(Vector2 plant_coordinates)        //chiamato in fase di raccolta frutti
     {
         default_position = transform.position;
 
-        OnCameraCloseUp?.Invoke(false);
-
-        StopAllCoroutines();
-
-        StartCoroutine(MoveToCoordinatesAnimation(new Vector3(plant_coordinates.x, default_camera_height, plant_coordinates.y), distance_from_plant, lowering_amount));
-    }
-
-    internal void MoveToPlant(Vector2 plant_coordinates, GameObject impollination_canvas)       //overload chiamato in fase di impollinazione
-    {
-        default_position = transform.position;
-
-        impollination_canvas.SetActive(true);
-
-        OnCameraCloseUp?.Invoke(false);
+        OnCameraAnimation?.Invoke();
 
         StopAllCoroutines();
 
@@ -72,25 +57,14 @@ public class CameraAnimations : MonoBehaviour
 
     internal void ResetPosition()       //chiamato in uscita da raccolta frutti
     {
-        OnCameraMoveAway?.Invoke(true);
+        OnCameraAnimation?.Invoke();
 
         StopAllCoroutines();
 
         StartCoroutine(MoveToCoordinatesAnimation(default_position, 0, 0));
     }
 
-    internal void ResetPosition(GameObject impollination_canvas)        //overload chiamato in uscita da impolliazione
-    {
-        impollination_canvas.SetActive(false);
-
-        OnCameraMoveAway?.Invoke(true);
-
-        StopAllCoroutines();
-
-        StartCoroutine(MoveToCoordinatesAnimation(default_position, 0, 0));
-    }
-
-    private IEnumerator MoveToCoordinatesAnimation(Vector3 target_coordinates, float z_offset, float y_offset)
+    private IEnumerator MoveToCoordinatesAnimation(Vector3 target_coordinates, float z_offset, float y_offset)      //un po' di manini per gestire zoom e spostamento della telecamera
     {
         controller.enabled = false;
 

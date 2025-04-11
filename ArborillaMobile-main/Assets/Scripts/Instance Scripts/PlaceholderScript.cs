@@ -40,9 +40,9 @@ public class PlaceholderScript : MonoBehaviour, IUniversalInteractions
     {
         if (!IsSpotAvailable()) return;
 
-        SpawnManagerScript.Instance.SpawnPlant(GetComponentsInParent<Transform>()[1], requested_chromosomes);
+        SpawnManagerScript.Singleton.SpawnPlant(GetComponentsInParent<Transform>()[1], requested_chromosomes);
 
-        InventoryManagerScript.Singleton.UpdateFruitsCollection(requested_chromosomes, -1);
+        InventoryManagerSO.Singleton.UpdateFruitsCollection(requested_chromosomes, -1);
 
         seeds_menu_script.ExitPlantingPhase(requested_chromosomes);
     }

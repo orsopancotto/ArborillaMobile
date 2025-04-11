@@ -26,20 +26,18 @@ public class SeedsMenuScript : MonoBehaviour
         relative_btn_mask.SetActive(true);
     }
 
-    private async void Start()
+    private void Start()
     {
-        await InventoryManagerScript.Singleton.DataLoaded();
-
         Initialization();
 
-        InventoryManagerScript.Singleton.OnFruitsCollectionUpdated += OnFruitsCollectionUpdated_UpdateSeedsInventory;
+        InventoryManagerSO.Singleton.OnFruitsCollectionUpdated += OnFruitsCollectionUpdated_UpdateSeedsInventory;
     }
 
-    private void Initialization()       //istanzio i bottoni necessari in base ai frutti presenti nel file di salvataggio
+    private void Initialization()       //istanzio i bottoni necessari in base ai frutti presenti nell'inventario
     {
         ButtonSpriteSwap loaded_btn;
 
-        foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerScript.Singleton.fruitsCollection)
+        foreach (KeyValuePair<PlantGenetics.AllelesCouple, short> pair in InventoryManagerSO.Singleton.fruitsCollection)
         {
             loaded_btn = Instantiate(Resources.Load($"Prefabs/UI/Seeds/{pair.Key} Button") as GameObject, seeds_menu_content).GetComponent<ButtonSpriteSwap>();
 
@@ -128,12 +126,17 @@ public class SeedsMenuScript : MonoBehaviour
         {
             ButtonSpriteSwap new_button = Instantiate(Resources.Load($"Prefabs/UI/Seeds/{key} Button") as GameObject, seeds_menu_content).GetComponent<ButtonSpriteSwap>();
 
-            new_button.GetComponent<Button>().onClick.AddListener(delegate { OnClick_PlantingPhase(key); });
+            new_button.onClick.AddListener(delegate { OnClick_PlantingPhase(key); });
 
             seeds_menu_counters.Add(key, (new_button.GetComponentInChildren<Text>(), new_button));
 
             seeds_menu_counters[key].counter.text = "1";
         }
+    }
+
+    private void OnDestroy()
+    {
+        InventoryManagerSO.Singleton.OnFruitsCollectionUpdated -= OnFruitsCollectionUpdated_UpdateSeedsInventory;
     }
 
 }

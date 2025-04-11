@@ -33,4 +33,9 @@ public class ButtonSpriteSwap : Button
     {
         image_component.sprite = deselected_sprite;
     }
+
+    protected override void OnDestroy()
+    {
+        onClick.RemoveAllListeners();
+    }
 }

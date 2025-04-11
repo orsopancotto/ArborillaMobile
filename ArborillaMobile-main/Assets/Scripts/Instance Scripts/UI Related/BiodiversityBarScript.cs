@@ -11,24 +11,29 @@ public class BiodiversityBarScript : MonoBehaviour
     private float speed;
 
     
-    void Start()
+    private void Awake()
     {
-        BiodiversityManager.Singleton.OnBiodivProgressUpdated += OnBiodivProgressUpdated_UpdateUI;
-        BiodiversityManager.Singleton.OnBiodivLevelUp += OnBiodivLevelUp_UpdateUI;
+        BiodiversityManagerSO.Singleton.OnBiodivProgressUpdated += OnBiodivProgressUpdated_UpdateUI;
+        BiodiversityManagerSO.Singleton.OnBiodivLevelUp += OnBiodivLevelUp_UpdateUI;
 
         if (SystemInfo.deviceType != DeviceType.Desktop) speed = .3f;
 
         else speed = .15f;
     }
 
-    internal void InitializeUI(byte loaded_level, float loaded_progress, float max_lvl_progress)
+    private void Start()
+    {
+        InitializeUI();
+    }
+
+    private void InitializeUI()
     {
         float f;
 
         //gestisce l'errore f/0;
         try
         {
-            f = loaded_progress / max_lvl_progress;
+            f = (float)GameData.currentSessionData.biodivLvlProgress / (float)GameData.currentSessionData.maxLvlProgress;
         }
 
         catch
@@ -36,7 +41,7 @@ public class BiodiversityBarScript : MonoBehaviour
             f = 0;
         }
 
-        level_txt.SetText(loaded_level.ToString());
+        level_txt.SetText(GameData.currentSessionData.biodivLvl.ToString());
 
         progress_txt.SetText($"PROGRESS: {(byte)(f * 100)}");
 
@@ -61,26 +66,26 @@ public class BiodiversityBarScript : MonoBehaviour
 
     private IEnumerator ProgressAnimation(float new_progress)
     {
-        if(mask.fillAmount < new_progress)
+        float starting_delta = Mathf.Abs(new_progress - mask.fillAmount);
+
+        while(!HasReachedTargetValue(starting_delta, new_progress, mask.fillAmount))
         {
-            while (mask.fillAmount < new_progress)
-            {
-                mask.fillAmount = Mathf.Lerp(mask.fillAmount, new_progress + .05f, speed);
+            mask.fillAmount = Mathf.Lerp(mask.fillAmount, new_progress, speed);
 
-                yield return null;
-            }
-        }
-
-        else
-        {
-            while (mask.fillAmount > new_progress)
-            {
-                mask.fillAmount = Mathf.Lerp(mask.fillAmount, new_progress - .05f, speed);
-
-                yield return null;
-            }
+            yield return null;
         }
 
         progress_txt.SetText($"PROGRESS: {(byte)(new_progress * 100)}%");
+    }
+
+    private bool HasReachedTargetValue(float start, float target, float current)
+    {
+        return Mathf.Abs(target - current) / start < .05f;
+    }
+
+    private void OnDestroy()
+    {
+        BiodiversityManagerSO.Singleton.OnBiodivProgressUpdated -= OnBiodivProgressUpdated_UpdateUI;
+        BiodiversityManagerSO.Singleton.OnBiodivLevelUp -= OnBiodivLevelUp_UpdateUI;
     }
 }

@@ -2,25 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-public class InventoryManagerScript : MonoBehaviour, IDataPersistance
+[CreateAssetMenu(fileName = "Inventory Manager", menuName = "Scriptable Objects/Inventory Manager")]
+public class InventoryManagerSO : ScriptableObject, IDataPersistance
 {
-    public static InventoryManagerScript Singleton { get; private set; }
+    public static InventoryManagerSO Singleton { get; private set; }
 
-    internal Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection = new();
-
-    internal Dictionary<PlantGenetics.AllelesCouple, short> fruitsCollection = new();
-
+    internal Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection/* = new()*/;
+    internal Dictionary<PlantGenetics.AllelesCouple, short> fruitsCollection/* = new()*/;
     internal Action<PlantGenetics.AllelesCouple, short> OnPollenCollectionUpdated;
-
     internal Action<PlantGenetics.AllelesCouple, short> OnFruitsCollectionUpdated;
 
-    private void Awake()
+    private void OnEnable()
     {
         Singleton = this;
+    }
+
+    public void InitializeObj()
+    {
+        return;
+    }
+
+    public void LoadData()
+    {
+        pollenCollection = GameData.currentSessionData.pollenCollection;
+
+        fruitsCollection = GameData.currentSessionData.fruitsCollection;
+    }
+
+    public void SaveData()
+    {
+        GameData.currentSessionData.pollenCollection = pollenCollection;
+
+        GameData.currentSessionData.fruitsCollection = fruitsCollection;
     }
 
     internal void UpdatePollenCollection(PlantGenetics.AllelesCouple _chromes, sbyte amount)        //chiamato da PlantScript; procedura di aggiornamento inventario
@@ -53,26 +68,5 @@ public class InventoryManagerScript : MonoBehaviour, IDataPersistance
         }
 
         OnFruitsCollectionUpdated?.Invoke(_chromes, fruitsCollection[_chromes]);      //lancio evento di aggiornamento UI
-    }
-
-    public void LoadData()
-    {
-        pollenCollection = GameData.currentSessionData.pollenCollection;
-
-        fruitsCollection = GameData.currentSessionData.fruitsCollection;
-
-        DataLoaded();       //brutto ma funzia
-    }
-
-    internal async Task DataLoaded()
-    {
-        await Task.Yield();
-    }
-
-    public void SaveData()
-    {
-        GameData.currentSessionData.pollenCollection = pollenCollection;
-
-        GameData.currentSessionData.fruitsCollection = fruitsCollection;
     }
 }

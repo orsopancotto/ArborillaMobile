@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/TransitionScene.unity
     guid: a58c34904623e594794eab2cb7469b38
   - enabled: 1
-    path: Assets/Scenes/MainScene.unity
+    path: Assets/Scenes/GreenhouseScene.unity
     guid: 48cc4b9cd6872814fab0cb04900f980c
   m_configObjects: {}

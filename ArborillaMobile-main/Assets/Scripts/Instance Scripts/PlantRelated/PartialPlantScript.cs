@@ -20,14 +20,14 @@ public class PartialPlantScript : MonoBehaviour, IUniversalInteractions
 
         has_been_harvested = set_harvested;
 
-        Instantiate(genetics.Models[3], transform);
+        Instantiate(genetics.models[3], transform);
     }
 
     private void StartFruitsHarvest()
     {
-        Transform[] anchors = Instantiate(genetics.Models[4], transform).GetComponentsInChildren<Transform>();
+        Transform[] anchors = Instantiate(genetics.models[4], transform).GetComponentsInChildren<Transform>();
 
-        GameObject fruit = Resources.Load<PlantsDictionaryScriptableObject>("Plants Dictionary").chromes_fruit[genetics.chromosomes];
+        GameObject fruit = PlantsDictionaryScriptableObject.Singleton.chromesFruit[genetics.chromosomes];
 
         byte amount = (byte)UnityEngine.Random.Range(1, genetics.avrgFruitsOutput + 1);
 
@@ -64,7 +64,7 @@ public class PartialPlantScript : MonoBehaviour, IUniversalInteractions
 
         GetComponentInChildren<Collider>().enabled = false;
 
-        GreenhouseManagerScript.Singleton.greenhouse_plants[transform.parent.name] = (genetics.chromosomes, true);
+        GreenhouseManagerSO.Singleton.greenhouse_plants[transform.parent.name] = (genetics.chromosomes, true);
 
         StartFruitsHarvest();
     }

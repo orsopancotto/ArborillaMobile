@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 
 [System.Serializable]
@@ -21,9 +18,9 @@ public class GameData
     public Dictionary<PlantGenetics.AllelesCouple, short> pollenCollection;
 
     /// <summary>
-    /// Dizionario delle piante salvate nell'oasi: spot in cui è posizionata la pianta -> dati identificativi della pianta e della fase di vita
+    /// Lista di pacchetti di dati che identificano la pianta nell'oasi
     /// </summary>
-    public Dictionary<string/*nome spot in cui la pianta è posizionata*/, (PlantGenetics.AllelesCouple Chromosomes, PlantScript.LifeStage LifeStage, PlantGenetics.AllelesCouple SonChromes, short Timer, string DateTime)> oasisPlants;
+    public List<PlantDataPacket> oasisPlants;
 
     /// <summary>
     /// Dizionario delle piante della serra: spot in cui è piantata -> tipo di pianta e stato dei frutti
@@ -57,5 +54,40 @@ public class GameData
             {"Spot (4)", (PlantGenetics.AllelesCouple.BB, false) },
             {"Spot (5)", (PlantGenetics.AllelesCouple.CC, false) }
         };
+    }
+
+    public override string ToString()
+    {
+        return $"biodivLvl: {biodivLvl}\n*****" +
+            $"\nbiodivLvlProgress: {biodivLvlProgress}\n*****" +
+            $"\nmaxLvlProgress: {maxLvlProgress}\n*****" +
+            $"\noasisPlants:\n{/*ListToString(oasisPlants)*/oasisPlants.Count}\n*****" +
+            $"\npollenCollection:\n{/*DictionaryToString(pollenCollection)*/pollenCollection.Count}\n*****" +
+            $"\nfruitsCollection:\n{/*DictionaryToString(fruitsCollection)*/fruitsCollection.Count}\n*****" +
+            $"\ngreenhousePlants: {greenhousePlants.Count}*****";
+    }
+
+    private string DictionaryToString<TK, TV>(Dictionary<TK, TV> map)
+    {
+        string s = "";
+
+        foreach(var v in map)
+        {
+            s += $"{v.Key}; {v.Value}\n";
+        }
+
+        return s;
+    }
+
+    private string ListToString<T>(List<T> list)
+    {
+        string s = "";
+
+        foreach(var obj in list)
+        {
+            s += $"{obj}\n";
+        }
+
+        return s;
     }
 }
