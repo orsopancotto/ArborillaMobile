@@ -19,8 +19,8 @@ public class GameManager : MonoBehaviour
     private DataPersistance data_persistance_manager;
     private int current_scene_index = 0;
 
-    internal Action<int> OnSceneLoaded;
-    internal Action OnGameStarted;
+    public Action<int> OnSceneLoaded;
+    public Action OnGameStarted;
 
 #if !UNITY_EDITOR
     private float fade_speed = .3f;

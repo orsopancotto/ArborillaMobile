@@ -226,8 +226,8 @@ public class PlantScript : MonoBehaviour, IUniversalInteractions
 
     private void StartFruitsHarvest()
     {
-        if (genetics.chromosomes != PlantGenetics.AllelesCouple.AA ||
-            genetics.chromosomes != PlantGenetics.AllelesCouple.BB ||
+        if (genetics.chromosomes != PlantGenetics.AllelesCouple.AA &&
+            genetics.chromosomes != PlantGenetics.AllelesCouple.BB &&
             genetics.chromosomes != PlantGenetics.AllelesCouple.CC
             ) throw new Exception("Deve ancora essere implementato :(");
 

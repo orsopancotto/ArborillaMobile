@@ -103,7 +103,7 @@ public class BiodiversityManagerSO : ScriptableObject, IDataPersistance
         plants_in_scene[chromes]++;
     }
 
-    private void RemovePlant(PlantGenetics.AllelesCouple chromes)       //rimuovoi la pianta dal dizionario di piante presenti in scena
+    private void RemovePlant(PlantGenetics.AllelesCouple chromes)       //rimuovo la pianta dal dizionario di piante presenti in scena
     {
         plants_in_scene[chromes]--;
 
